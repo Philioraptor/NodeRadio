@@ -1,0 +1,19 @@
+{
+  "manifest_version": 3,
+  "name": "DOM.fm - Vibe Scraper",
+  "version": "1.0",
+  "description": "Extracts the vibe of any website to generate a procedural soundtrack.",
+  "permissions": [
+    "offscreen"
+  ],
+  "background": {
+    "service_worker": "background_service_worker.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}
