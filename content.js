@@ -130,7 +130,7 @@ async function scrapeVibe() {
     };
 
     // Print it to the console so we can see it working!
-    console.log("%c 🎧 DOM.fm Vibe Extracted!", "color: #00ff00; font-weight: bold; font-size: 14px;");
+    console.log("%c DOM.fm Vibe Extracted!", "color: #00ff00; font-weight: bold; font-size: 14px;");
     console.log("Vibe Data:", vibeData);
     chrome.runtime.sendMessage({ type: "NEW_VIBE", data: vibeData });
 }

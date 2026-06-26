@@ -5,7 +5,7 @@
  * No audio is played inside this sandbox.
  */
 
-console.log("🤖 Sandbox Generator loaded.");
+console.log("Sandbox Generator loaded.");
 
 // --- Magenta.js Setup ---
 const model = new mm.MusicRNN("https://storage.googleapis.com/magentadata/js/checkpoints/music_rnn/basic_rnn");
@@ -13,15 +13,15 @@ let modelInitialized = false;
 
 // Initialize the model immediately on load
 async function initModel() {
-    console.log("🤖 Sandbox Generator: Initializing Magenta MusicRNN...");
+    console.log("Sandbox Generator: Initializing Magenta MusicRNN...");
     try {
         await model.initialize();
         modelInitialized = true;
-        console.log("🤖 Sandbox Generator: Magenta MusicRNN Initialized successfully!");
+        console.log("Sandbox Generator: Magenta MusicRNN Initialized successfully!");
         // Let the parent know we are loaded and ready
         window.parent.postMessage({ type: "GENERATOR_READY" }, "*");
     } catch (err) {
-        console.error("🤖 Sandbox Generator: Magenta initialization failed:", err);
+        console.error("Sandbox Generator: Magenta initialization failed:", err);
     }
 }
 initModel();
@@ -77,7 +77,7 @@ async function generateNextChunk(seedNumber, lastSequence) {
         totalTime: generated.totalTime - offset
     };
     
-    console.log(`🤖 Sandbox Generator: Generated chunk of ${result.notes.length} notes successfully.`);
+    console.log(`Sandbox Generator: Generated chunk of ${result.notes.length} notes successfully.`);
     return result;
 }
 
@@ -86,13 +86,13 @@ window.addEventListener("message", async (event) => {
     const data = event.data;
     if (data && data.type === "GENERATE_NEXT") {
         if (!modelInitialized) {
-            console.warn("🤖 Sandbox Generator: Model not ready yet.");
+            console.warn("Sandbox Generator: Model not ready yet.");
             window.parent.postMessage({ type: "GENERATION_FAILED", error: "Model not initialized" }, "*");
             return;
         }
         
         try {
-            console.log("🤖 Sandbox Generator: Generating next chunk for seed:", data.seed);
+            console.log("Sandbox Generator: Generating next chunk for seed:", data.seed);
             const chunk = await generateNextChunk(data.seed, data.lastSequence);
             
             // Post the generated notes back to the parent frame
@@ -102,7 +102,7 @@ window.addEventListener("message", async (event) => {
                 requestId: data.requestId
             }, "*");
         } catch (err) {
-            console.error("🤖 Sandbox Generator: Generation error:", err);
+            console.error("Sandbox Generator: Generation error:", err);
             window.parent.postMessage({ type: "GENERATION_FAILED", error: err.message }, "*");
         }
     }

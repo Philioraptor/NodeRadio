@@ -9,7 +9,7 @@
  * based on the webpage's URL seed.
  */
 
-console.log("🎛️ Receiver Bridge: Initialized with Website-Specific Composition Engine.");
+console.log("Receiver Bridge: Initialized with Website-Specific Composition Engine.");
 
 const iframe = document.getElementById("audio-sandbox");
 let iframeLoaded = false;
@@ -84,7 +84,7 @@ function selectKeyFromSeed(seed) {
     currentRootBass = currentRootTreble - 24; // 2 octaves lower
     
     const noteNames = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
-    console.log(`🎛️ Receiver Bridge: Root key set to ${noteNames[semitoneOffset]} (MIDI ${currentRootTreble})`);
+    console.log(`Receiver Bridge: Root key set to ${noteNames[semitoneOffset]} (MIDI ${currentRootTreble})`);
 }
 
 // 2. Scale Snapping function
@@ -155,7 +155,7 @@ function generateProgressionFromSeed(seed, scaleIntervals, rootBass) {
     
     const degrees = [firstDegree, secondDegree, thirdDegree, fourthDegree];
     currentChordProgression = degrees.map(d => generateChord(d, scaleIntervals, rootBass));
-    console.log(`🎛️ Receiver Bridge: Generated chord progression on degrees: [${degrees.join(", ")}]`);
+    console.log(`Receiver Bridge: Generated chord progression on degrees: [${degrees.join(", ")}]`);
 }
 
 // 5. Procedural Drum Pattern Shuffler (Varies beats based on seed)
@@ -449,7 +449,7 @@ let requestIdCounter = 0;
 const pendingRequests = new Map();
 
 iframe.addEventListener("load", () => {
-    console.log("🎛️ Receiver Bridge: Sandbox iframe loaded!");
+    console.log("Receiver Bridge: Sandbox iframe loaded!");
     iframeLoaded = true;
     if (pendingVibe) {
         processVibeUpdate(pendingVibe);
@@ -494,7 +494,7 @@ window.addEventListener("message", (event) => {
     const data = event.data;
     if (data) {
         if (data.type === "GENERATOR_READY") {
-            console.log("🎛️ Receiver Bridge: Sandbox generator reported READY.");
+            console.log("Receiver Bridge: Sandbox generator reported READY.");
             generatorReady = true;
         } else if (data.type === "GENERATED_SEQUENCE") {
             const req = pendingRequests.get(data.requestId);
@@ -518,7 +518,7 @@ async function scheduleNextChunk() {
     if (!isPlaying) return;
     
     if (!generatorReady) {
-        console.log("🎛️ Receiver Bridge: Waiting for sandbox generator to be ready...");
+        console.log("Receiver Bridge: Waiting for sandbox generator to be ready...");
         setTimeout(scheduleNextChunk, 1000);
         return;
     }
@@ -529,11 +529,11 @@ async function scheduleNextChunk() {
         
         const now = Tone.now();
         if (nextPlayTime < now + 0.1) {
-            console.log(`🎛️ Receiver Bridge: Latency shift detected, adjusting nextPlayTime from ${nextPlayTime.toFixed(2)} to ${(now + 0.1).toFixed(2)}`);
+            console.log(`Receiver Bridge: Latency shift detected, adjusting nextPlayTime from ${nextPlayTime.toFixed(2)} to ${(now + 0.1).toFixed(2)}`);
             nextPlayTime = now + 0.1;
         }
         
-        console.log(`🎛️ Receiver Bridge: Scheduling chunk of ${chunk.notes.length} notes at time ${nextPlayTime.toFixed(2)}`);
+        console.log(`Receiver Bridge: Scheduling chunk of ${chunk.notes.length} notes at time ${nextPlayTime.toFixed(2)}`);
 
         const scaleIntervals = currentScale.intervals;
 
@@ -587,7 +587,7 @@ async function scheduleNextChunk() {
         
         cleanupOldParts();
     } catch (err) {
-        console.error("🎛️ Receiver Bridge: Playback scheduling error:", err);
+        console.error("Receiver Bridge: Playback scheduling error:", err);
         setTimeout(scheduleNextChunk, 1500);
     }
 }
@@ -614,7 +614,7 @@ function applyMapping(color, textDensity, category, url) {
     
     // 2. Classify genre and select scale
     activeGenre = classifyGenre(category, url);
-    console.log(`🎛️ Receiver Bridge: Genre classified as ${activeGenre.toUpperCase()}`);
+    console.log(`Receiver Bridge: Genre classified as ${activeGenre.toUpperCase()}`);
     
     if (activeGenre === "indian_fusion") {
         if (color === "dark") {
@@ -629,7 +629,7 @@ function applyMapping(color, textDensity, category, url) {
     } else if (activeGenre === "ambient") {
         currentScale = SCALES.major;
     }
-    console.log(`🎛️ Receiver Bridge: Scale set to ${currentScale.name}`);
+    console.log(`Receiver Bridge: Scale set to ${currentScale.name}`);
     
     // 3. Generate unique chord progression for this website seed!
     generateProgressionFromSeed(currentSeed, currentScale.intervals, currentRootBass);
@@ -647,7 +647,7 @@ function applyMapping(color, textDensity, category, url) {
     const bpmVariance = (currentSeed % 17) - 8; // +/- 8 BPM variance
     const finalBpm = baseBpm + bpmVariance;
     Tone.Transport.bpm.rampTo(finalBpm, 0.8);
-    console.log(`🎛️ Receiver Bridge: Final BPM set to ${finalBpm} (variance ${bpmVariance})`);
+    console.log(`Receiver Bridge: Final BPM set to ${finalBpm} (variance ${bpmVariance})`);
     
     // 6. Dynamic Pad Synth configurations & volume calibrations
     if (activeGenre === "lofi_chill") {
@@ -707,7 +707,7 @@ function startDrone() {
             tamburaStep++;
         }, "2n");
         tamburaLoop.start(0);
-        console.log(`🎼 Receiver Bridge: Started automated Tambura loop.`);
+        console.log(`Receiver Bridge: Started automated Tambura loop.`);
     } else {
         chordLoop = new Tone.Loop(time => {
             if (!isPlaying) return;
@@ -735,7 +735,7 @@ function startDrone() {
             currentBar++;
         }, "1m");
         chordLoop.start(0);
-        console.log(`🎼 Receiver Bridge: Started chord progression loop.`);
+        console.log(`Receiver Bridge: Started chord progression loop.`);
     }
 }
 
@@ -750,7 +750,7 @@ function stopDrone() {
         chordLoop.dispose();
         chordLoop = null;
     }
-    console.log("🎼 Receiver Bridge: Cleaned up loops.");
+    console.log("Receiver Bridge: Cleaned up loops.");
 }
 
 
@@ -806,7 +806,7 @@ function speak(text) {
 async function startRadio() {
     if (isPlaying) return;
     
-    console.log("🎼 Receiver Bridge: Starting AudioContext and Playback...");
+    console.log("Receiver Bridge: Starting AudioContext and Playback...");
     await Tone.start();
     isPlaying = true;
     lastSequence = null;
@@ -822,7 +822,7 @@ async function startRadio() {
 }
 
 function stopRadio() {
-    console.log("🎼 Receiver Bridge: Stopping Playback...");
+    console.log("Receiver Bridge: Stopping Playback...");
     isPlaying = false;
     Tone.Transport.stop();
     Tone.Transport.cancel();
@@ -862,11 +862,11 @@ function processVibeUpdate(data) {
 // --- Runtime Communication ---
 chrome.runtime.onMessage.addListener((message) => {
     if (message.target === "offscreen") {
-        console.log("🎛️ Receiver Bridge: Received vibe data from Service Worker:", message.data);
+        console.log("Receiver Bridge: Received vibe data from Service Worker:", message.data);
         if (iframeLoaded) {
             processVibeUpdate(message.data);
         } else {
-            console.log("🎛️ Receiver Bridge: Sandbox not loaded yet, queuing vibe.");
+            console.log("Receiver Bridge: Sandbox not loaded yet, queuing vibe.");
             pendingVibe = message.data;
         }
     }
