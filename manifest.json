@@ -9,6 +9,12 @@
   "background": {
     "service_worker": "background_service_worker.js"
   },
+  "content_security_policy": {
+    "sandbox": "sandbox allow-scripts; script-src 'self' 'unsafe-inline' blob:; worker-src 'self' blob:; child-src 'self' blob:;"
+  },
+  "sandbox": {
+    "pages": ["sandbox.html"]
+  },
   "content_scripts": [
     {
       "matches": ["<all_urls>"],

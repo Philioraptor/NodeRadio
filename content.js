@@ -15,6 +15,7 @@ async function generateUrlSeed(url) {
 
 // 2. Figure out if the page is for reading or looking (Text Density)
 function getTextDensity() {
+    if (!document.body) return "low";
     // Grab all visible text on the page
     const text = document.body.innerText || "";
     // Count the words
@@ -28,6 +29,7 @@ function getTextDensity() {
 
 // 3. Figure out if the site is dark mode or light mode
 function getColorTheme() {
+    if (!document.body) return "light";
     let bgColor = window.getComputedStyle(document.body).backgroundColor;
     
     // If the body background is transparent, check the documentElement (html)
@@ -58,7 +60,53 @@ function getColorTheme() {
     return "light"; // Default fallback
 }
 
-// 4. The Master Function: Package it all up!
+// 4. Semantic AI Keyword Classifier
+function getSemanticCategory() {
+    if (!document) return "general";
+    
+    const title = (document.title || "").toLowerCase();
+    
+    let metaDescription = "";
+    const metaDescEl = document.querySelector('meta[name="description"]');
+    if (metaDescEl) metaDescription = (metaDescEl.getAttribute("content") || "").toLowerCase();
+    
+    let metaKeywords = "";
+    const metaKeyEl = document.querySelector('meta[name="keywords"]');
+    if (metaKeyEl) metaKeywords = (metaKeyEl.getAttribute("content") || "").toLowerCase();
+    
+    const h1s = Array.from(document.querySelectorAll('h1')).map(el => el.innerText.toLowerCase()).join(" ");
+    
+    const contentText = (title + " " + metaDescription + " " + metaKeywords + " " + h1s);
+    
+    // Semantic Categories Keyword lists
+    const devKeywords = ["code", "github", "stackoverflow", "developer", "programming", "api", "git", "npm", "compile", "syntax", "json", "python", "javascript", "typescript", "c++", "rust", "html", "css", "docker", "kubernetes", "database", "sql", "localhost", "127.0.0.1"];
+    
+    const academicKeywords = ["wiki", "research", "article", "paper", "news", "history", "science", "nature", "journal", "academic", "university", "study", "lecture", "book", "literature", "geography", "biography", "encyclopedia", "dictionary"];
+    
+    const prodKeywords = ["google", "drive", "doc", "mail", "notion", "slack", "spreadsheet", "task", "project", "calendar", "meet", "zoom", "trello", "jira", "asana", "workspace", "email", "notes", "todo", "inbox"];
+    
+    let devScore = 0;
+    let academicScore = 0;
+    let prodScore = 0;
+    
+    devKeywords.forEach(k => { if (contentText.includes(k)) devScore++; });
+    academicKeywords.forEach(k => { if (contentText.includes(k)) academicScore++; });
+    prodKeywords.forEach(k => { if (contentText.includes(k)) prodScore++; });
+    
+    if (devScore > 0 && devScore >= academicScore && devScore >= prodScore) {
+        return "developer";
+    }
+    if (academicScore > 0 && academicScore >= devScore && academicScore >= prodScore) {
+        return "academic";
+    }
+    if (prodScore > 0 && prodScore >= devScore && prodScore >= academicScore) {
+        return "productivity";
+    }
+    
+    return "general"; // Default fallback
+}
+
+// 5. The Master Function: Package it all up!
 async function scrapeVibe() {
     const currentUrl = window.location.href;
     
@@ -68,14 +116,16 @@ async function scrapeVibe() {
     // Grab our visual/textual metrics
     const textDensity = getTextDensity();
     const colorTheme = getColorTheme();
+    const category = getSemanticCategory();
 
-    // The Payload (This is what you will eventually hand to Dev 2)
+    // The Payload (Sent to service worker -> offscreen document)
     const vibeData = {
         url: currentUrl,
         seed: seedHash,
-        color: colorTheme, // Deliverable format requires 'color'
-        colorTheme: colorTheme, // For backward compatibility
+        color: colorTheme,
+        colorTheme: colorTheme,
         textDensity: textDensity,
+        category: category,
         timestamp: new Date().toISOString()
     };
 
